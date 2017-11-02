@@ -10,11 +10,9 @@
 * Decouple core business logic from external concerns in Hexagonal style architectures
 * Use as an alternative to ActiveRecord callbacks and Observers in Rails apps
 * Connect objects based on context without permanence
-* Publish events synchronously or asynchronously
+* React to events synchronously or asynchronously
 
 Note: Wisper was originally extracted from a Rails codebase but is not dependant on Rails.
-
-Please also see the [Wiki](https://github.com/krisleech/wisper/wiki) for more additional information and articles.
 
 ## Installation
 
@@ -76,7 +74,7 @@ class OrderNotifier
   def cancel_order_successful(order_id)
     order = Order.find_by_id(order_id)
 
-    # notify someone ...    
+    # notify someone ...
   end
 end
 ```
@@ -117,6 +115,14 @@ this will prevent any subsequent listeners having their events delivered.
 cancel_order.subscribe(OrderNotifier.new, async: true)
 ```
 
+You can also pass additional configuration options to the job using the following syntax:
+
+```ruby
+cancel_order.subscribe(OrderNotifier.new, async: { queue: 'custom', retry: false })
+```
+
+The list of supported handler options is determined by adapter
+
 Wisper has various adapters for asynchronous event handling, please refer to
 [wisper-celluloid](https://github.com/krisleech/wisper-celluloid),
 [wisper-sidekiq](https://github.com/krisleech/wisper-sidekiq),
@@ -133,7 +139,7 @@ class OrderNotifier
   def self.cancel_order_successful(order_id)
     order = Order.find_by_id(order_id)
 
-    # notify someone ...    
+    # notify someone ...
   end
 end
 ```
